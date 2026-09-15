@@ -1,61 +1,66 @@
 using UnityEngine;
 
 public class RoomController : MonoBehaviour
-{
-    [SerializeField] private Transform enemyContainer;
-    [SerializeField] private RoomDoor doorA;
-    [SerializeField] private RoomDoor doorB;
+ {
+ [SerializeField] private Transform enemyContainer;
+ [SerializeField] private RoomDoor doorA;
+ [SerializeField] private RoomDoor doorB;
 
-    private RoomGenerator roomGenerator;
-    private bool roomCompleted;
+ private RoomGenerator roomGenerator;
+ private bool roomCompleted;
 
-    public void Initialize(RoomGenerator generator)
-    {
-        roomGenerator = generator;
+ public void Initialize(RoomGenerator generator)
+ {
+ roomGenerator = generator;
+ Debug.Log("Sala creada");
+ doorA.Initialize(this);
+ doorB.Initialize(this);
 
-        doorA.Initialize(this);
-        doorB.Initialize(this);
+ roomCompleted = false;
+ }
 
-        roomCompleted = false;
-    }
+ private void Update()
+ {
+ if (roomCompleted)
+ {
+ return;
+ }
 
-    private void Update()
-    {
-        if (roomCompleted)
-            return;
+ if (AreAllEnemiesDead())
+ {
+ CompleteRoom();
+ }
+ }
 
-        if (AreAllEnemiesDead())
-        {
-            CompleteRoom();
-        }
-    }
+ private bool AreAllEnemiesDead()
+ {
+ if (enemyContainer == null)
+ return true;
 
-    private bool AreAllEnemiesDead()
-    {
-        if (enemyContainer == null)
-            return true;
+ Transform[] allChildren = enemyContainer.GetComponentsInChildren<Transform>();
 
-        for (int i = 0; i < enemyContainer.childCount; i++)
-        {
-            Transform enemy = enemyContainer.GetChild(i);
+ foreach (Transform enemy in allChildren)
+ {
+ if (enemy == enemyContainer) continue;
 
-            if (enemy.gameObject.activeInHierarchy)
-                return false;
-        }
+ if (enemy.gameObject.activeInHierarchy)
+ {
+ return false;
+ }
+ }
+ return true;
+ }
 
-        return true;
-    }
+ private void CompleteRoom()
+ {
+ roomCompleted = true;
+ Debug.Log("Sala Completada");
+ doorA.Unlock();
+ doorB.Unlock();
+ }
 
-    private void CompleteRoom()
-    {
-        roomCompleted = true;
-
-        doorA.Unlock();
-        doorB.Unlock();
-    }
-
-    public void UseDoor(RoomDoor door, Transform player)
-    {
-        roomGenerator.GenerateNextRoom(door, player);
-    }
-}
+ public void UseDoor(RoomDoor door, Transform player)
+ {
+ roomGenerator.GenerateNextRoom(door, player);
+ }
+ }
