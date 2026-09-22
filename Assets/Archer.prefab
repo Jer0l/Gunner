@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 789201691523802722}
   - component: {fileID: 4712044447351886061}
+  - component: {fileID: 4783008542973493769}
   m_Layer: 0
   m_Name: Archer
   m_TagString: Untagged
@@ -91,3 +92,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &4783008542973493769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8574606906256617098}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9001890b393e03941b35b1e597babcb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  attackRange: 3
+  chaseRange: 7
+  moveSpeed: 1.5
