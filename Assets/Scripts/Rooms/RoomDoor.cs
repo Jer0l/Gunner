@@ -3,6 +3,7 @@ using UnityEngine;
 public class RoomDoor : MonoBehaviour
  {
  [SerializeField] private Transform nextRoomPoint;
+ [SerializeField] private int doorUsed;
 
  private RoomController roomController;
  private bool unlocked;
@@ -31,6 +32,6 @@ public class RoomDoor : MonoBehaviour
  if (!other.CompareTag("Player"))
  return;
 
- roomController.UseDoor(this, other.transform);
+ roomController.UseDoor(this, other.transform, doorUsed);
  }
  }

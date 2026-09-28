@@ -22,8 +22,10 @@ namespace ED262C
         // Si lo contiene, devuelve false
         public bool Add(T item)
         {
-            if(Contains(item)) return false;
-            throw new System.NotImplementedException();
+            if (Contains(item)) return false; 
+            ValidateSize(count + 1);
+            internalArray[count] = item;
+            count++; return true;
         }
 
         public void Clear()

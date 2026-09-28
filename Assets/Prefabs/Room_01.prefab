@@ -469,6 +469,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   nextRoomPoint: {fileID: 4129609555663068722}
+  doorUsed: 1
 --- !u!1 &5292478555377712217
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,6 +745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomDoor
   nextRoomPoint: {fileID: 9202014615638626619}
+  doorUsed: 2
 --- !u!1 &8486909862006690054
 GameObject:
   m_ObjectHideFlags: 0

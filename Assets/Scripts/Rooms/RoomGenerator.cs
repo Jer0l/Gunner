@@ -8,6 +8,8 @@ public class RoomGenerator : MonoBehaviour
  [SerializeField] private GameObject[] roomPrefabs;
  [SerializeField] private int maxRooms = 5;
 
+ [SerializeField] private MiniMapUI miniMapUI;
+ private int currentRoomID = 0;
  private SimpleArrayQueue<RoomData> roomQueue;
  private RoomController currentRoom;
 
@@ -55,12 +57,14 @@ public class RoomGenerator : MonoBehaviour
  return;
  }
 
- currentRoom.Initialize(this);
-
+ currentRoomID = 1;
  generatedRooms = 1;
- }
 
- public void GenerateNextRoom(RoomDoor door, Transform player)
+ currentRoom.Initialize(this);
+ miniMapUI.AddRoom(currentRoomID, 0);
+  }
+
+ public void GenerateNextRoom(RoomDoor door, Transform player, int doorUsed)
  {
  if (generatedRooms >= maxRooms)
  {
@@ -74,8 +78,6 @@ public class RoomGenerator : MonoBehaviour
  return;
  }
 
- RoomData roomData = roomQueue.Dequeue();
-
  Transform nextRoomPoint = door.NextRoomPoint;
 
  if (nextRoomPoint == null)
@@ -84,7 +86,7 @@ public class RoomGenerator : MonoBehaviour
  return;
  }
 
- GameObject oldRoom = currentRoom.gameObject;
+ RoomData roomData = roomQueue.Dequeue();
 
  GameObject newRoom = Instantiate(
  roomData.roomPrefab,
@@ -100,13 +102,15 @@ public class RoomGenerator : MonoBehaviour
  Destroy(newRoom);
  return;
  }
-
+ GameObject oldRoom = currentRoom.gameObject;
  newRoomController.Initialize(this);
 
  currentRoom = newRoomController;
 
  generatedRooms++;
+ currentRoomID++;
 
+ miniMapUI.AddRoom(currentRoomID, doorUsed);
  player.position = newRoom.transform.position;
 
  Destroy(oldRoom);

@@ -59,8 +59,8 @@ public class RoomController : MonoBehaviour
  doorB.Unlock();
  }
 
- public void UseDoor(RoomDoor door, Transform player)
+ public void UseDoor(RoomDoor door, Transform player, int doorUsed)
  {
- roomGenerator.GenerateNextRoom(door, player);
+ roomGenerator.GenerateNextRoom(door, player, doorUsed);
  }
  }
