@@ -1,3 +1,5 @@
+using UnityEngine.Rendering;
+
 namespace ED262C
 {
     public class SimpleArraySet<T> : ISimpleSet<T>
@@ -18,14 +20,31 @@ namespace ED262C
 
         public SimpleArraySet() => internalArray = new T[defaultCapacity];
 
+        public SimpleArraySet(ISimpleSet<T> original)
+        {
+            // Convertimos el Set a un array
+            T[] originalArray = original.ToArray();
+            // Inicializamos el array interno con el mismo largo que el original
+            internalArray = new T[originalArray.Length];
+            // Copiamos todos los elementos de uno a otro
+            for(int i = 0; i < originalArray.Length; i++)
+            {
+                internalArray[i] = originalArray[i];
+            }
+            // Inicializamos count con la cantidad de elementos del array original
+            count = originalArray.Length;
+        }
+
         // Si no lo contiene, lo agrega al final y devuelve true
         // Si lo contiene, devuelve false
         public bool Add(T item)
         {
-            if (Contains(item)) return false; 
-            ValidateSize(count + 1);
+            if(Contains(item)) return false;
+            // Antes de agregar, verifica que haya espacio y resizea de ser necesario
+            ValidateSize(count);
             internalArray[count] = item;
-            count++; return true;
+            count++;
+            return true;
         }
 
         public void Clear()
@@ -40,20 +59,62 @@ namespace ED262C
             return IndexOf(item) >= 0;
         }
 
+        // Devuelve un nuevo Set con todos los elementos de este Set que NO estan en el otro
         public ISimpleSet<T> DifferenceWith(ISimpleSet<T> other)
         {
-            throw new System.NotImplementedException();
+            // Arrancamos con un Set vacio
+            ISimpleSet<T> result = new SimpleArraySet<T>();
+            // Recorremos nuestro array (garantiza que esten los elementos de este Set)
+            for (int i = 0; i < count; i++)
+            {
+                // Solo agregamos si el otro set NO lo contiene
+                if (!other.Contains(internalArray[i]))
+                {
+                    result.Add(internalArray[i]);
+                }
+            }
+            // Devolvemos el nuevo set
+            return result;
         }
 
+        // Devuelve un Set con los elementos en comun
         public ISimpleSet<T> IntersectWith(ISimpleSet<T> other)
         {
-            throw new System.NotImplementedException();
+            // Arrancamos con un Set vacio
+            ISimpleSet<T> result = new SimpleArraySet<T>();
+            // Recorremos nuestro array (garantiza que esten los elementos de este Set)
+            for(int i = 0; i < count; i++)
+            {
+                // Solo agregamos si el otro set tambien lo contiene
+                if (other.Contains(internalArray[i]))
+                {
+                    result.Add(internalArray[i]);
+                }
+            }
+            // Devolvemos el nuevo set
+            return result;
         }
 
         public bool Remove(T item)
         {
+            // Si NO lo contiene, no lo puede remover y devuelve false
             int itemIndex = IndexOf(item);
             if (itemIndex < 0) return false;
+            // A diferencia de List o Queue, no se respeta el orden,
+            // Por lo cual no usamos shiftLeft, cuya complejidad es 0(n)
+            // Mover un solo elemento tiene complejidad O(1)
+
+            // Si lo contiene, va al indice del elemento y lo remueve
+            // Pisamos el indice a remover con el ultimo elemento
+            // Salvo que el elemento a remover sea el ultimo
+            if (itemIndex != count - 1)
+            {
+                internalArray[itemIndex] = internalArray[count - 1];
+            }
+            // Defaulteamos el ultimo indice en cualquier caso:
+            // Si era el ultimo, lo borramos
+            // Si no era el ultimo, lo borramos para que no quede duplicado
+            internalArray[count - 1] = default;
             return true;
         }
 
@@ -70,9 +131,19 @@ namespace ED262C
             return result;
         }
 
+        // Devuelve un Set con todos los elementos de ambos sets
         public ISimpleSet<T> UnionWith(ISimpleSet<T> other)
         {
-            throw new System.NotImplementedException();
+            // Partimos de una copia del otro Set
+            ISimpleSet<T> result = new SimpleArraySet<T>(other);
+            // Agregamos todos los elementos de este Set
+            // Si estan repetidos, Add ya los filtra (no llamamos a Contains)
+            for(int i = 0; i < count; i++)
+            {
+                result.Add(internalArray[i]);
+            }
+            // Devolvemos el nuevo set
+            return result;
         }
 
         void ValidateSize(int nextIndex)
