@@ -6,7 +6,7 @@ public class MiniMapUI : MonoBehaviour
     [SerializeField] private RectTransform mapContainer;
     [SerializeField] private GameObject roomIconPrefab;
 
-    [SerializeField] private float roomDistance = 80f;
+    [SerializeField] private float roomDistance = 20f;
 
     private Vector2 currentMapPosition;
 
