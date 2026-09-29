@@ -42,18 +42,39 @@ namespace ED262C
 
         public ISimpleSet<T> DifferenceWith(ISimpleSet<T> other)
         {
-            throw new System.NotImplementedException();
+            SimpleArraySet<T> result = new SimpleArraySet<T>(); 
+            for (int i = 0; i < count; i++) 
+            { 
+                if (!other.Contains(internalArray[i])) 
+                    result.Add(internalArray[i]); 
+            }
+            return result;
         }
 
         public ISimpleSet<T> IntersectWith(ISimpleSet<T> other)
         {
-            throw new System.NotImplementedException();
+            SimpleArraySet<T> result = new SimpleArraySet<T>(); 
+
+            for (int i = 0; i < count; i++) 
+            { 
+                if (other.Contains(internalArray[i])) 
+                    result.Add(internalArray[i]); 
+            }
+            return result;
         }
 
         public bool Remove(T item)
         {
             int itemIndex = IndexOf(item);
             if (itemIndex < 0) return false;
+
+            for(int i = itemIndex; i < count - 1; i++)
+            {
+                internalArray[i] = internalArray[i + 1];
+            }
+
+            internalArray[count - 1] = default(T);
+            count--;
             return true;
         }
 
@@ -72,7 +93,17 @@ namespace ED262C
 
         public ISimpleSet<T> UnionWith(ISimpleSet<T> other)
         {
-            throw new System.NotImplementedException();
+            SimpleArraySet<T> result = new SimpleArraySet<T>(); 
+
+            for (int i = 0; i < count; i++) 
+                result.Add(internalArray[i]); 
+
+            T[] otherArray = other.ToArray(); 
+
+            for (int i = 0; i < otherArray.Length; i++) 
+                result.Add(otherArray[i]); 
+
+            return result;
         }
 
         void ValidateSize(int nextIndex)

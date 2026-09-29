@@ -8,7 +8,9 @@ public class RoomGenerator : MonoBehaviour
  [SerializeField] private GameObject[] roomPrefabs;
  [SerializeField] private int maxRooms = 5;
 
+ [SerializeField] private RoomMap roomMap;
  [SerializeField] private MiniMapUI miniMapUI;
+
  private int currentRoomID = 0;
  private SimpleArrayQueue<RoomData> roomQueue;
  private RoomController currentRoom;
@@ -61,6 +63,7 @@ public class RoomGenerator : MonoBehaviour
  generatedRooms = 1;
 
  currentRoom.Initialize(this);
+ roomMap.DiscoverRoom(currentRoomID);
  miniMapUI.AddRoom(currentRoomID, 0);
   }
 
@@ -110,6 +113,17 @@ public class RoomGenerator : MonoBehaviour
  generatedRooms++;
  currentRoomID++;
 
+ roomMap.DiscoverRoom(currentRoomID);
+
+ if (doorUsed == 1)
+ {
+ roomMap.AddConnection(currentRoomID, RoomDirection.Right);
+ }
+
+ else if (doorUsed == 2)
+ {
+ roomMap.AddConnection(currentRoomID, RoomDirection.Up);
+ }
  miniMapUI.AddRoom(currentRoomID, doorUsed);
  player.position = newRoom.transform.position;
 

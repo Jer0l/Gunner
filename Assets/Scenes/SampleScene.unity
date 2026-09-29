@@ -187,6 +187,7 @@ MonoBehaviour:
   roomPrefabs:
   - {fileID: 871458616271793400, guid: 284bff6ccb13e584a9142a79ac6a56b6, type: 3}
   maxRooms: 3
+  roomMap: {fileID: 1047302717}
   miniMapUI: {fileID: 1593493826}
 --- !u!4 &435386807
 Transform:
